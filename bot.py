@@ -1,6 +1,7 @@
 import discord
 import requests
 import json
+import token
 from discord.ext import commands
 
 # commands.Bot class is a sub-class of discord.Client()
@@ -25,6 +26,4 @@ async def quote(ctx):
     await ctx.send(final)
 
 # client.run(os.getenv('TOKEN'))
-f = open('./token.txt','r')
-token = f.read()
-bot.run(token)
+bot.run(token.get_token())

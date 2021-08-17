@@ -5,3 +5,4 @@ Scripts
 pyvenv.cfg
 Lib
 __pycache__
+test.py

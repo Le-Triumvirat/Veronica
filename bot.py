@@ -19,11 +19,17 @@ async def test(ctx):
 
 @bot.command()
 async def quote(ctx):
-    response = requests.get("https://zenquotes.io/api/random")
-    quote = response.json()[0]['q']
-    author = response.json()[0]['a']
-    final = quote+' - '+author
-    await ctx.send(final)
+    if(ctx.channel=='bot-commands'):
+        response = requests.get("https://zenquotes.io/api/random")
+        quote = response.json()[0]['q']
+        author = response.json()[0]['a']
+        final = quote+' - '+author
+        await ctx.send(final)
+    else:
+        await ctx.send('Kindly perform this commmand in #bot-commands channel')
+
+@bot.commmand()
+async def 
 
 # client.run(os.getenv('TOKEN'))
 bot.run(os.environ['TOKEN'])

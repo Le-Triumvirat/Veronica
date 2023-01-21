@@ -1,8 +1,0 @@
-.env
-commands.txt
-Include
-Scripts
-pyvenv.cfg
-Lib
-__pycache__
-test.py

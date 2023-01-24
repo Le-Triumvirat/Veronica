@@ -1,0 +1,24 @@
+{
+  "name": "veronica",
+  "version": "1.0.0",
+  "description": "![image](https://user-images.githubusercontent.com/22389408/128738872-cefb9d88-511c-4f95-8697-6ff8111efa89.png)",
+  "main": "src/bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishnubalaji/Veronica.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vishnubalaji/Veronica/issues"
+  },
+  "homepage": "https://github.com/vishnubalaji/Veronica#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3"
+  }
+}

@@ -1,4 +1,3 @@
-
 require('dotenv').config()
 const {Client, IntentsBitField} = require('discord.js')
 const client = new Client({
@@ -10,15 +9,38 @@ const client = new Client({
     ]
 })
 
+// To notify the bot has logged into the server
 client.on('ready', (e) => {
     console.log(`Logged in as ${client.user.tag}!`);
 })
 
+// Just for testing connectivity and response
 client.on('messageCreate', (msg) => {
-    console.log(msg)
-    if(msg.content === "hello") {
-        msg.reply("hey!")
+    if(msg.content === "ping") {
+        msg.reply("pong!")
     }
 })
 
+// listener for (/) commands
+client.on('interactionCreate', (interaction) => {
+    if(!interaction.isChatInputCommand()) return;
+    let command = interaction.commandName
+    switch(command) {
+        case 'greet':
+            let hours = new Date().getHours();
+            if(hours<12){
+                interaction.reply('Good morning!')
+            }
+            else if(hours>12 && hours<17){
+                interaction.reply('Good afternoon!')
+            }
+            else{
+                interaction.reply('Good evening!')
+            }
+        case 'ping':
+            interaction.reply('pong!')
+    }
+})
+
+// logs in
 client.login(process.env.TOKEN);

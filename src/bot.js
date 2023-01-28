@@ -23,22 +23,59 @@ client.on('messageCreate', (msg) => {
 
 // listener for (/) commands
 client.on('interactionCreate', (interaction) => {
-    if(!interaction.isChatInputCommand()) return;
-    let command = interaction.commandName
-    switch(command) {
-        case 'greet':
-            let hours = new Date().getHours();
-            if(hours<12){
-                interaction.reply('Good morning!')
+    try {
+        if(!interaction.isChatInputCommand()) return;
+        if(interaction.member.roles.cache.some(role=>role.name == 'BotMaster')){
+            let command = interaction.commandName
+            switch(command) {
+                case 'greet':
+                    let hours = new Date().getHours();
+                    if(hours<12){
+                        interaction.reply('Good morning!')
+                    }
+                    else if(hours>12 && hours<17){
+                        interaction.reply('Good afternoon!')
+                    }
+                    else{
+                        interaction.reply('Good evening!')
+                    }
+                case 'ping':
+                    interaction.reply('PONG!')
+                    // interaction.reply(`Websocket heartbeat: ${client.ws.ping}ms.`)
+                case 'worthy':
+                    interaction.reply('oh yes, you are the bot master!')
             }
-            else if(hours>12 && hours<17){
-                interaction.reply('Good afternoon!')
-            }
-            else{
-                interaction.reply('Good evening!')
-            }
-        case 'ping':
-            interaction.reply('pong!')
+        }
+        else{
+            interaction.reply('You are not worthy. BotMaster role is required for executing bot commands')
+            return;
+        }
+    } catch (error) {
+        if(error!=InteractionAlreadyReplied){
+            console.log(error)
+        }
+    }
+})
+
+client.on('interactionCreate', async (interaction) => {
+    if(interaction.isButton()){
+        // listener for role button click
+        const role = interaction.guild.roles.cache.get(interaction.customId)
+        await interaction.deferReply({ephemeral:true})
+        if(!role){
+            await interaction.editReply({
+                content: 'Role not found :('
+            })
+            return;
+        }
+        const hasRole = interaction.member.roles.cache.has(role.id)
+        if(hasRole){
+            await interaction.member.roles.remove(role)
+            await interaction.editReply(`The role ${role} has been removed `)
+            return;
+        }
+        await interaction.member.roles.add(role)
+        await interaction.editReply(`The role ${role} has been added `)
     }
 })
 

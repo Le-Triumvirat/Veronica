@@ -14,6 +14,10 @@ const commands = [
         name: 'ping',
         description: 'outputs pong'
     },
+    {
+        name: 'worthy',
+        description: 'checks if the user executing the bot command has the BotMaster role'
+    },
 ]
 
 const rest = new REST({'version':10}).setToken(process.env.TOKEN);

@@ -39,9 +39,11 @@ client.on('interactionCreate', (interaction) => {
                     else{
                         interaction.reply('Good evening!')
                     }
+                    break;
                 case 'ping':
-                    interaction.reply('PONG!')
                     // interaction.reply(`Websocket heartbeat: ${client.ws.ping}ms.`)
+                    interaction.reply('PONG!')
+                    break;
                 case 'worthy':
                     interaction.reply('oh yes, you are the bot master!')
             }
@@ -51,9 +53,7 @@ client.on('interactionCreate', (interaction) => {
             return;
         }
     } catch (error) {
-        if(error!=InteractionAlreadyReplied){
-            console.log(error)
-        }
+        console.log(error)
     }
 })
 

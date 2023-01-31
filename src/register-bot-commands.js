@@ -1,5 +1,5 @@
 require('dotenv').config()
-const {REST, Routes} = require('discord.js')
+const {REST, Routes, ApplicationCommandOptionType} = require('discord.js')
 
 const commands = [
     {
@@ -18,6 +18,18 @@ const commands = [
         name: 'worthy',
         description: 'checks if the user executing the bot command has the BotMaster role'
     },
+    {
+        name: "play",
+        description: "Plays a song/audio!",
+        options: [
+            {
+                name: "query",
+                type: ApplicationCommandOptionType.String,
+                description: "The song you want to play",
+                required: true
+            }
+        ]
+      }
 ]
 
 const rest = new REST({'version':10}).setToken(process.env.TOKEN);

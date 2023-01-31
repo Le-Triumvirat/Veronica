@@ -1,13 +1,27 @@
 require('dotenv').config()
 const {Client, IntentsBitField} = require('discord.js')
+const {Player, QueryType} = require("discord-player");
+
 const client = new Client({
     intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMembers,
         IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.MessageContent
+        IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.GuildVoiceStates
     ]
 })
+
+// Create a new Player (you don't need any API Key)
+const player = new Player(client, {
+    ytdlOptions: {
+        quality: "highestaudio",
+        highWaterMark: 1<<25
+    }
+});
+
+// add the trackStart event so when a song will be played this message will be sent
+player.on("trackStart", (queue, track) => queue.metadata.channel.send(`🎧 Playing **${track.title}**`))
 
 // To notify the bot has logged into the server
 client.on('ready', (e) => {
@@ -78,6 +92,44 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.editReply(`The role ${role} has been added `)
     }
 })
+
+client.on("interactionCreate", async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.commandName === "play") {
+        if (!interaction.member.voice.channelId){
+            return await interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+        }
+        if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId){
+            return await interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
+        }
+        const query = interaction.options.getString("query");
+        const queue = player.createQueue(interaction.guild, {
+            metadata: {
+                channel: interaction.channel
+            }
+        });
+        
+        // verify vc connection
+        try {
+            if (!queue.connection) await queue.connect(interaction.member.voice.channel);
+        } catch {
+            queue.destroy();
+            return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
+        }
+
+        await interaction.deferReply();
+        const track = await player.search(query, {
+            requestedBy: interaction.user,
+            searchEngine: QueryType.YOUTUBE_VIDEO
+        }).then(x => x.tracks[0]);
+        if (!track) return await interaction.followUp({ content: `Track **${query}** not found!` });
+
+        queue.play(track);
+
+        return await interaction.followUp({ content: `🔃 Loading track **${track.title}**!` });
+    }
+});
 
 // logs in
 client.login(process.env.TOKEN);

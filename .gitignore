@@ -1,2 +1,6 @@
 node_modules
 .env
+ffmpeg_5.1.1-1ubuntu1_amd64.deb
+promises.js
+logger.js
+app.js
